@@ -7,6 +7,7 @@ import userEvent from '@testing-library/user-event'
 import {build, fake} from '@jackfranklin/test-data-bot'
 import {rest} from 'msw' 
 import {setupServer} from 'msw/node'
+import {handlers} from 'test/server-handlers'
 import Login from '../../components/login-submission'
 
 const buildLoginForm = build({
@@ -16,18 +17,7 @@ const buildLoginForm = build({
   },
 })
 
-const server = setupServer(
-  rest.post('https://auth-provider.example.com/api/login',
-             async (req, res, ctx) => {
-               if (!req.body.password) {
-                 return res(ctx.status(400), ctx.json({message: 'password is required'}))
-               } 
-               if (!req.body.username) {
-                 return res(ctx.status(400), ctx.json({message: 'username is required'}))
-               }
-               return res(ctx.json({username: req.body.username}))
-             })
-)
+const server = setupServer(...handlers)
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
