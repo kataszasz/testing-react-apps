@@ -35,7 +35,6 @@ test(`logging in displays the user's username`, async () => {
   expect(screen.getByText(username)).toBeInTheDocument()
 })
 
-
 test(`login failure dispays the error message`, async () => {
   render(<Login />)
   const {username, password} = buildLoginForm()
@@ -45,5 +44,7 @@ test(`login failure dispays the error message`, async () => {
 
   await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
 
-  expect(screen.getByRole('alert')).toHaveTextContent('password required')
+  expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
+    `"password required"`,
+  )
 })
